@@ -10,11 +10,13 @@ takes as input the model file and gives the approximate count as the output with
 sudo apt install make cmake g++
 ```
 
-## After cloning the repository
+## Creating the binary
+After cloning the repository, run the following commands in the root
+
 ```
 make
-make runtests
 ```
+This builds the tool binary and runs test cases for sanity check.
 
 ## Instructions to use the tool
 ```bash
