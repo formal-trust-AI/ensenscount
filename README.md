@@ -1,3 +1,7 @@
+# EnSensCount : a tool for quantifying sensitivity
+EnSensCount is a tool for counting the number of sensitive regions in the input space of decision tree ensembles. It 
+takes as input the model files and gives the approximate count as the output within given epsilon-delta bounds that can be configured by the user.
+
 # Usage Instructions
 
 ## Dependencies
