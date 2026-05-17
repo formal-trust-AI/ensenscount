@@ -86,13 +86,13 @@ Edit `config/experiment_config.yaml`:
 
 ```yaml
 # SSH Connection
-user: ajinkya
-server: 10.129.26.36           # Jump server
-host: 10.1.1.101               # Target server
-experiment_folder: /home/ajinkya/experiments/new_exps
+user: [user name]
+server: [server ip]         # Jump server
+host: [host ip]               # Target server
+experiment_folder: /path/to/experiments/
 
 # Data and Parameters
-benchmark_dir: ./data/benchmarks/covtype_d3
+benchmark_dir: ./models/model-dir/
 gap: 0.2
 precision: -1
 bit_distance: 1
