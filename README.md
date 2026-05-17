@@ -29,35 +29,53 @@ For help:
 ## Directory Structure
 
 ```
-xgboost-counting/
-├── ensenscount_experiments           # Main entry point script
-├── config/
-│   └── experiment_config.yaml  # Configuration file
-├── scripts/
-│   ├── experiment/             # Experiment workflow scripts
-│   │   ├── upload_and_prepare.py
-│   │   ├── trigger_experiments.py
-│   │   ├── check_progress.py
-│   │   ├── download_results.py
-│   │   └── run_experiment_legacy.py
-│   ├── utils/                  # Reusable utilities
-│   │   └── ssh_utils.py
-│   └── analysis/               # Analysis and plotting
-│       ├── plot_cactus.py
-│       └── result.py
-├── data/
-│   └── benchmarks/             # Benchmark datasets
-│       └── covtype_d3/
-├── src/                        # Source code (C++)
+ensenscount/
+├── CMakeLists.txt
+├── Makefile
+├── README.md
+├── baseline/       #source files for ADD-baseline
 │   ├── main.cpp
 │   └── ...
-├── include/                        # Header files
-├── lib/                        # Libraries
-├── experiment_results/         # Downloaded results
-│   ├── outputs/
-│   ├── logs/
-│   └── plots/
-└── reports/                    # Documentation and reports
+├── include/
+│   ├── DTree.h
+│   ├── json.hpp
+│   ├── pepin_counting.hpp
+│   └── sanity_check.hpp
+├── models/
+│   ├── diabetes/           # DTE models trained on tabular datasets (as json files)
+│   │   ├── 0010_3.json
+│   │   └── ...
+│   └── ...
+├── scripts/
+│   ├── analysis/
+│   │   ├── compare_counts.py
+│   │   ├── parse_execution_times.py
+│   │   ├── plot_add_node_growth.py
+│   │   ├── plot_cactus.py
+│   │   ├── plot_comparison.py
+│   │   ├── plot_execution_times.py
+│   │   ├── plot_heatmap.py
+│   │   ├── print_tree.py
+│   │   └── result.py
+│   ├── debug/ #additional tools for debugging
+│   ├── ensenscount_experiments/ #script to run experiments
+│   ├── experiment/
+│   │   ├── check_progress.py
+│   │   ├── download_results.py
+│   │   ├── trigger_experiments.py
+│   │   └── upload_and_prepare.py
+│   ├── experiment_config.yaml #experiment configuration file
+│   ├── json_to_png.py #to create visualisation of model as trees
+│   ├── tests/
+│   │   └── run_count_regression.sh #tests
+│   └── utils/
+│       ├── add_ssh_key.sh
+│       └── ssh_utils.py
+├── src/
+│   ├── main.cpp
+│   └── ...
+└── tests/
+    └── naive_regression_cases.tsv
 ```
 
 ## Configuration
