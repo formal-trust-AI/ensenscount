@@ -74,25 +74,25 @@ ensenscount/
 │       ├── add_ssh_key.sh
 │       └── ssh_utils.py
 ├── src/
-    ├── main.cpp  # Program entry point: parses CLI options, loads XGBoost JSON models, builds subproblems, and runs counting.
-    ├── utils.hpp # Shared data structures and declarations for trees, boolean split variables, config parsing, guards, and helpers.
-    ├── utils.cpp # Implements JSON tree parsing, CLI parsing, logging verbosity, guard generation/replacement, and utility routines.
-    ├── gen_subps.hpp # Declares helpers and the SubProblemGenerator used to create/prune sensitive-feature subproblems.
-    ├── gen_subps.cpp # Implements split collection, tree cloning/pruning, bitmask generation, and subproblem pair generation.
-    ├── solve_subps.hpp # Declares SubproblemSolver for converting trees to ADD/BDD representations and solving subproblems.
-    ├── solve_subps.cpp # Implements ADD construction, feature-order constraints, ensemble subtraction, thresholding, and counting dispatch.
-    ├── counting_config.hpp # Declares global counting configuration, selected method, bitmasks, Pepin parameters, and dump settings.
-    ├── counting_config.cpp # Stores and updates the global counting configuration used by counting implementations.
-    ├── counting_wrapper.hpp # Declares a unified counting interface that hides the selected counting backend.
-    ├── counting_wrapper.cpp # Dispatches counting calls to boundary, naive, or Pepin counting and computes the final aggregate count.
-    ├── counting_boundary.hpp # Declares the boundary-counting backend based on BDD satisfying minterm counts.
-    ├── counting_boundary.cpp # Implements boundary counting and optional dumping of satisfying assignments.
-    ├── counting_naive.hpp # Declares the naive exact-counting backend that enumerates satisfying assignments.
-    ├── counting_naive.cpp # Implements assignment enumeration, global de-duplication of M1x/M2x values, and optional assignment dumps.
-    ├── pepin_counting.cpp # Implements the Pepin-style randomized approximate counting backend over BDD samples.
-    ├── sanity_check.cpp # Implements optional BDD assignment sanity checks for feature-ordering constraints.
-    ├── debug_utils.hpp # Provides DebugOutputManager for exporting trees, ADDs, and intermediate debug artifacts as DOT files.
-    └── tree_exporter.hpp # Provides DecisionTreeExporter for writing internal decision trees to Graphviz DOT format.
+│   ├── main.cpp  # Program entry point: parses CLI options, loads XGBoost JSON models, builds subproblems, and runs counting.
+│    ├── utils.hpp # Shared data structures and declarations for trees, boolean split variables, config parsing, guards, and helpers.
+│    ├── utils.cpp # Implements JSON tree parsing, CLI parsing, logging verbosity, guard generation/replacement, and utility routines.
+│    ├── gen_subps.hpp # Declares helpers and the SubProblemGenerator used to create/prune sensitive-feature subproblems.
+│    ├── gen_subps.cpp # Implements split collection, tree cloning/pruning, bitmask generation, and subproblem pair generation.
+│    ├── solve_subps.hpp # Declares SubproblemSolver for converting trees to ADD/BDD representations and solving subproblems.
+│    ├── solve_subps.cpp # Implements ADD construction, feature-order constraints, ensemble subtraction, thresholding, and counting dispatch.
+│    ├── counting_config.hpp # Declares global counting configuration, selected method, bitmasks, Pepin parameters, and dump settings.
+│    ├── counting_config.cpp # Stores and updates the global counting configuration used by counting implementations.
+│    ├── counting_wrapper.hpp # Declares a unified counting interface that hides the selected counting backend.
+│    ├── counting_wrapper.cpp # Dispatches counting calls to boundary, naive, or Pepin counting and computes the final aggregate count.
+│    ├── counting_boundary.hpp # Declares the boundary-counting backend based on BDD satisfying minterm counts.
+│    ├── counting_boundary.cpp # Implements boundary counting and optional dumping of satisfying assignments.
+│    ├── counting_naive.hpp # Declares the naive exact-counting backend that enumerates satisfying assignments.
+│    ├── counting_naive.cpp # Implements assignment enumeration, global de-duplication of M1x/M2x values, and optional assignment dumps.
+│    ├── pepin_counting.cpp # Implements the Pepin-style randomized approximate counting backend over BDD samples.
+│    ├── sanity_check.cpp # Implements optional BDD assignment sanity checks for feature-ordering constraints.
+│    ├── debug_utils.hpp # Provides DebugOutputManager for exporting trees, ADDs, and intermediate debug artifacts as DOT files.
+│    └── tree_exporter.hpp # Provides DecisionTreeExporter for writing internal decision trees to Graphviz DOT format.
 └── tests/
     └── naive_regression_cases.tsv
 ```
