@@ -74,7 +74,7 @@ ensenscount/
 │       ├── add_ssh_key.sh
 │       └── ssh_utils.py
 ├── src/
-│   ├── main.cpp  # Program entry point: parses CLI options, loads XGBoost JSON models, builds subproblems, and runs counting.
+│    ├── main.cpp  # Program entry point: parses CLI options, loads XGBoost JSON models, builds subproblems, and runs counting.
 │    ├── utils.hpp # Shared data structures and declarations for trees, boolean split variables, config parsing, guards, and helpers.
 │    ├── utils.cpp # Implements JSON tree parsing, CLI parsing, logging verbosity, guard generation/replacement, and utility routines.
 │    ├── gen_subps.hpp # Declares helpers and the SubProblemGenerator used to create/prune sensitive-feature subproblems.
