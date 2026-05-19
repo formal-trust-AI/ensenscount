@@ -72,7 +72,7 @@ For help:
 
 ## Explanation of Hyperparameters 
 
-The user can provide the ```epsilon``` and ```delta``` values as per their discretion. The tool has three verbosity levels which can be chosen ```-V [0,1,2]``` by the user, default level is ```1```.
+The user can provide the ```epsilon``` and ```delta``` values as per their discretion. The tool has three verbosity levels which can be chosen  by the user (```-V [0,1,2]```), default level is ```1```.
 
 ## Directory Structure
 
