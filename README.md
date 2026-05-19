@@ -70,6 +70,10 @@ For help:
 ./ensenscount -h
 ```
 
+## Explanation of Hyperparameters 
+
+The user can provide the ```epsilon``` and ```delta``` values as per their discretion.
+
 ## Directory Structure
 
 ```
