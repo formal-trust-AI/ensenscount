@@ -70,7 +70,7 @@ For help:
 ./ensenscount -h
 ```
 
-## Explanation of Hyperparameters 
+## Explanation of Command Line Options 
 
 The sensitive feature can be selected by specifying its feature index (features are indexed by natural numbers) in the option ```-s```. The gap threshold is specified in the ```-g``` option, ```-k``` option specifying how many hguards of the sensitive feature can differ. The user can provide the ```epsilon``` and ```delta``` values as per their discretion. The tool has three verbosity levels which can be chosen  by the user (```-V [0,1,2]```), default level is ```1```. The tool also has another mode for exact count, which works only for very small ensembles (<20 trees), which can be activated by the following command line parameter - ```-M exact```. Precision level of the leaves of the ensemble can be specified in ```-p``` as number of decimal places for e.g ```-p 3``` specifies precision of leaf values upto 3 decimal places.
 ## Directory Structure
