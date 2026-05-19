@@ -1,6 +1,6 @@
 # EnSensCount : a tool for quantifying sensitivity
 EnSensCount is a tool for counting the number of sensitive regions in the input space of decision tree ensembles. It 
-takes as input the model file and gives the approximate count as the output within given epsilon-delta bounds that can be configured by the user.
+takes as input the model file and gives the approximate count as the output within given tolerance (referred to as "epsilon") with a certain probability (referred to as "delta"). Both of these parameters can be configured by the user.
 
 # Usage Instructions
 
@@ -21,6 +21,48 @@ This builds the tool binary and runs test cases for sanity check.
 ## Instructions to use the tool
 ```bash
 ./ensenscount -f <model-name> -g <gap between outputs> -p <precision, -1 for exact> -s <sensitive feature> -k <no of sensitive guards allowed to differ>
+```
+
+Below is a peak into the tool interface (input and output) for a given input.
+
+```bash
+./ensenscount -f ./models/0001_d.json -g 2 -s 2 -p 3 -k 1 -M pepin -V 1
+```
+
+```bash
+c o Model path :./models/0001_d.json
+c o Model name: 0001_d
+c o Precision: 3
+c o Gap: 2000
+c o Debug output: disabled
+c o Sanity checking: disabled
+c o Time starts now
+c o Sensitive features: 2 
+c o Counting method: pepin
+c o Loading the json file...c o Done
+c o No. of trees in the ensemble: 1
+c o No. of splits in the original ensemble: 7
+c o No. of sensitive feature splits in the original ensemble: 3
+c o Guard counts feature:2, count: 3
+c o Guard counts feature:5, count: 1
+c o Guard counts feature:8, count: 2
+c o Guard counts feature:9, count: 1
+c o Subproblems generated: 6
+[...]
+c o Final estimated count: 31
+c o Subproblem 5 ends
+c o Subproblem 0: count = 0, time taken = 5.34074 s
+c o Subproblem 1: count = 12, time taken = 5.33509 s
+c o Subproblem 2: count = 0, time taken = 1.10534 s
+c o Subproblem 3: count = 24, time taken = 1.29098 s
+c o Subproblem 4: count = 0, time taken = 1.10243 s
+c o Subproblem 5: count = 31, time taken = 1.27648 s
+c o Pepin global state cleared
+Total count (pepin counting): 31
+Total time taken: 17.1373 ms
+c o Maximum subproblem time: 5.34074 ms
+c o Log written to: ./logs/0001_d_gap_2000.000000_sens__2_prec_3.000000_bitd_1_20260519-162029.log
+c o Fraction of solutions violating sensitive feature guards: 0.645833
 ```
 
 For help:
