@@ -1,0 +1,26 @@
+*/out.txt
+*/outputs
+*/outputs/*
+*.swp
+*.pyc
+*.DS_Store
+src/*expts/*
+lib
+buildd
+buildr
+.vscode
+ensenscount
+ensenscount_b
+data/*
+lib.tar
+logs/
+debug_output/
+pbcount/
+config/experiment_config.yaml
+# LaTeX generated files
+*.aux
+*.log
+*.pdf
+*.synctex.gz
+models/
+motivation_results/
