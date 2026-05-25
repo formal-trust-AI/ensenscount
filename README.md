@@ -1,191 +1,132 @@
-# EnSensCount : a tool for quantifying sensitivity
-EnSensCount is a tool for counting the number of sensitive regions in the input space of decision tree ensembles. It 
-takes as input the model file and gives the approximate count as the output within given tolerance (referred to as "epsilon") with a certain probability (referred to as "delta"). Both of these parameters can be configured by the user.
+# Ensense
 
-# Usage Instructions
+A tool for sensitivity analysis of tree ensemble models. The tool supports XGBoost, Random forest, and LGBM models. 
 
-## Dependencies
+## Installations
 
+
+Installing python dependencies
 ```
-sudo apt install make cmake g++
-```
-
-## Creating the binary
-After cloning the repository, run the following commands in the root
-
-```
-make
-```
-This builds the tool binary and runs test cases for sanity check.
-
-## Instructions to use the tool
-```bash
-./ensenscount -f <model-name> -g <gap between outputs> -p <precision, -1 for exact> -s <sensitive feature> -k <no of sensitive guards allowed to differ>
+pip install -r requirements.txt
 ```
 
-Below is a peak into the tool interface (input and output) for a given input.
+## Running the docker image 
 
-```bash
-./ensenscount -f ./models/0001_d.json -g 2 -s 2 -p 3 -k 1 -M pepin -V 1
+If there is difficulty in installing python dependencies. One may use docker to run our tool.
+
+Give the following commands building the docker image.
+```
+$docker build -t sensitivity .
 ```
 
-```bash
-c o Model path :./models/0001_d.json
-c o Model name: 0001_d
-c o Precision: 3
-c o Gap: 2000
-c o Debug output: disabled
-c o Sanity checking: disabled
-c o Time starts now
-c o Sensitive features: 2 
-c o Counting method: pepin
-c o Loading the json file...c o Done
-c o No. of trees in the ensemble: 1
-c o No. of splits in the original ensemble: 7
-c o No. of sensitive feature splits in the original ensemble: 3
-c o Guard counts feature:2, count: 3
-c o Guard counts feature:5, count: 1
-c o Guard counts feature:8, count: 2
-c o Guard counts feature:9, count: 1
-c o Subproblems generated: 6
-[...]
-c o Final estimated count: 31
-c o Subproblem 5 ends
-c o Subproblem 0: count = 0, time taken = 5.34074 s
-c o Subproblem 1: count = 12, time taken = 5.33509 s
-c o Subproblem 2: count = 0, time taken = 1.10534 s
-c o Subproblem 3: count = 24, time taken = 1.29098 s
-c o Subproblem 4: count = 0, time taken = 1.10243 s
-c o Subproblem 5: count = 31, time taken = 1.27648 s
-c o Pepin global state cleared
-Total count (pepin counting): 31
-Total time taken: 17.1373 ms
-c o Maximum subproblem time: 5.34074 ms
-c o Log written to: ./logs/0001_d_gap_2000.000000_sens__2_prec_3.000000_bitd_1_20260519-162029.log
-c o Fraction of solutions violating sensitive feature guards: 0.645833
+
+Give the following command to start the docker
+```
+$docker run -it sensitivity
+```
+This will take you to a command line interface. 
+
+## Common use case
+
+To run use the following command:
+```
+python ./src/sensitive.py <model file> --solver <solvername> --output_gap <int pair> --precision <int> --features <int list> 
 ```
 
-For help:
-```bash
-./ensenscount -h
+## Example commands 
+
+Sample commands:
+
+## Running pseudo-Boolean (pb) tool from [SENSITIVITY VERIFICATION FOR ADDITIVE DECISION TREE ENSEMBLES](https://openreview.net/pdf?id=h0vC0fm1q7)
+```
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 2 5
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 2 5 --output_gap 0.2 0.8 --precision 400 --timeout 100 
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 2 3 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/breast_cancer/breast_cancer_details.csv 
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 2 5 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/breast_cancer/breast_cancer_details.csv --solver pb
 ```
 
-## Explanation of Command Line Options 
-
-The sensitive feature can be selected by specifying its feature index (features are indexed by natural numbers) in the option ```-s```. The gap threshold is specified in the ```-g``` option, ```-k``` option specifying how many hguards of the sensitive feature can differ. The user can provide the ```epsilon``` and ```delta``` values as per their discretion. The tool has three verbosity levels which can be chosen  by the user (```-V [0,1,2]```), default level is ```1```. The tool also has another mode for exact count, which works only for very small ensembles (<20 trees), which can be activated by the following command line parameter - ```-M exact```. Precision level of the leaves of the ensemble can be specified in ```-p``` as number of decimal places for e.g ```-p 3``` specifies precision of leaf values upto 3 decimal places.
-## Directory Structure
+## Running our implementation of [Evasion and Hardening of Tree Ensemble Classifiers](https://arxiv.org/abs/1509.07892)
 
 ```
-ensenscount/
-├── CMakeLists.txt
-├── Makefile
-├── README.md
-├── baseline/       #source files for ADD-baseline
-│   ├── main.cpp
-│   └── ...
-├── include/
-│   ├── DTree.h
-│   ├── json.hpp
-│   ├── pepin_counting.hpp
-│   └── sanity_check.hpp
-├── models/
-│   ├── diabetes/           # DTE models trained on tabular datasets (as json files)
-│   │   ├── 0010_3.json
-│   │   └── ...
-│   └── ...
-├── scripts/
-│   ├── analysis/
-│   │   ├── compare_counts.py
-│   │   ├── parse_execution_times.py
-│   │   ├── plot_add_node_growth.py
-│   │   ├── plot_cactus.py
-│   │   ├── plot_comparison.py
-│   │   ├── plot_execution_times.py
-│   │   ├── plot_heatmap.py
-│   │   ├── print_tree.py
-│   │   └── result.py
-│   ├── debug/ #additional tools for debugging
-│   ├── ensenscount_experiments/ #script to run experiments
-│   ├── experiment/
-│   │   ├── check_progress.py
-│   │   ├── download_results.py
-│   │   ├── trigger_experiments.py
-│   │   └── upload_and_prepare.py
-│   ├── experiment_config.yaml #experiment configuration file
-│   ├── json_to_png.py #to create visualisation of model as trees
-│   ├── tests/
-│   │   └── run_count_regression.sh #tests
-│   └── utils/
-│       ├── add_ssh_key.sh
-│       └── ssh_utils.py
-├── src/
-│    ├── main.cpp  # Program entry point: parses CLI options, loads XGBoost JSON models, builds subproblems, and runs counting.
-│    ├── utils.hpp # Shared data structures and declarations for trees, boolean split variables, config parsing, guards, and helpers.
-│    ├── utils.cpp # Implements JSON tree parsing, CLI parsing, logging verbosity, guard generation/replacement, and utility routines.
-│    ├── gen_subps.hpp # Declares helpers and the SubProblemGenerator used to create/prune sensitive-feature subproblems.
-│    ├── gen_subps.cpp # Implements split collection, tree cloning/pruning, bitmask generation, and subproblem pair generation.
-│    ├── solve_subps.hpp # Declares SubproblemSolver for converting trees to ADD/BDD representations and solving subproblems.
-│    ├── solve_subps.cpp # Implements ADD construction, feature-order constraints, ensemble subtraction, thresholding, and counting dispatch.
-│    ├── counting_config.hpp # Declares global counting configuration, selected method, bitmasks, Pepin parameters, and dump settings.
-│    ├── counting_config.cpp # Stores and updates the global counting configuration used by counting implementations.
-│    ├── counting_wrapper.hpp # Declares a unified counting interface that hides the selected counting backend.
-│    ├── counting_wrapper.cpp # Dispatches counting calls to boundary, naive, or Pepin counting and computes the final aggregate count.
-│    ├── counting_boundary.hpp # Declares the boundary-counting backend based on BDD satisfying minterm counts.
-│    ├── counting_boundary.cpp # Implements boundary counting and optional dumping of satisfying assignments.
-│    ├── counting_naive.hpp # Declares the naive exact-counting backend that enumerates satisfying assignments.
-│    ├── counting_naive.cpp # Implements assignment enumeration, global de-duplication of M1x/M2x values, and optional assignment dumps.
-│    ├── pepin_counting.cpp # Implements the Pepin-style randomized approximate counting backend over BDD samples.
-│    ├── sanity_check.cpp # Implements optional BDD assignment sanity checks for feature-ordering constraints.
-│    ├── debug_utils.hpp # Provides DebugOutputManager for exporting trees, ADDs, and intermediate debug artifacts as DOT files.
-│    └── tree_exporter.hpp # Provides DecisionTreeExporter for writing internal decision trees to Graphviz DOT format.
-└── tests/
-    └── naive_regression_cases.tsv
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 2 5 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/breast_cancer/breast_cancer_details.csv --solver milp
+```
+## Ensense tool from [DataAware and Scalable Sensitivity Analysis for Decision Tree Ensembles](https://arxiv.org/abs/2602.07453)
+
+### Authors
+
+Ensense was developed by:
+- Namrita Varshney
+- Ashutosh Gupta
+- Arhaan Ahmad
+- Tanay V. Tayal
+- S. Akshay
+
+```
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 2 5 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/breast_cancer/breast_cancer_details.csv --solver pb --all_opt
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 2 5 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/breast_cancer/breast_cancer_details.csv --solver pb --all_opt --prob  
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 7 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/breast_cancer/breast_cancer_details.csv --solver milp --all_opt --prob --compute_data_distance --data_file models/dataset/breast_cancer/breast_cancer_train.csv
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 7 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/breast_cancer/breast_cancer_details.csv --solver milp --all_opt --prob --compute_data_distance --data_file models/dataset/breast_cancer/breast_cancer_train.csv --in_distro_clauses outputs/output/learned-clauses_breast_cancer_robust.txt
+python ./src/sensitive.py models/adult/adult_t200_d5.json --features 11 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/adult/details.csv --solver milp --all_opt --prob --compute_data_distance --data_file models/dataset/adult/train.csv --in_distro_clauses outputs/output/learned-clauses_adult_t200_d5.txt
+python ./src/sensitive.py models/adult/adult_t200_d5.json --features 11 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/adult/details.csv --solver milp --all_opt --prob --compute_data_distance --data_file models/dataset/adult/train.csv --in_distro_clauses outputs/output/learned-clauses_adult_t200_d5.txt --local_check_file models/dataset/adult/test.csv 
+python ./src/sensitive.py models/adult/adult_t200_d5.json --features 11 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/adult/details.csv --solver milp --all_opt --prob --compute_data_distance --data_file models/dataset/adult/train.csv --in_distro_clauses outputs/output/learned-clauses_adult_t200_d5.txt --local_check_sample  0.089 0.5625 0.09353 0.63 0.7 0.75 0.10 0.9 0.375 0.5 -0.4 0.4 1.45 
 ```
 
-## Configuration
+Sometimes the model does not have enough information such as names and the operating range for the feature. We need to give details file that may provide names of each feature and the operating range of the each feature.
 
-Edit `config/experiment_config.yaml`:
+We can run our tool as a local sensitivity search tool also. It takes a list of sensitive feature (--features option), a point around which we search for the sensitivity (--local_check option), and perturbation upto which distance we search for the sensitivity (--perturb option).
 
-```yaml
-# SSH Connection
-user: [user name]
-server: [server ip]         # Jump server
-host: [host ip]               # Target server
-experiment_folder: /path/to/experiments/
-
-# Data and Parameters
-benchmark_dir: ./models/model-dir/
-gap: 0.2
-precision: -1
-bit_distance: 1
-num_cores: 25                  # Cores per ensenscount process
-max_parallel_jobs: 8           # Parallel benchmark jobs
-timeout: 3600
-
-# Options
-upload_code: true
-compile: true
+```
+python ./src/sensitive.py models/adult/adult_t200_d5.json --features 11 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/adult/details.csv --solver milp --all_opt --prob --compute_data_distance --data_file models/dataset/adult/train.csv --in_distro_clauses outputs/output/learned-clauses_adult_t200_d5.txt --local_check_sample  0.089 0.5625 0.09353 0.63 0.7 0.75 0.10 0.9 0.375 0.5 -0.4 0.4 1.45 
 ```
 
-## Scripts Overview
+Data conformal senstivity checking
+----------------------------------
 
-### Experiment Scripts (`scripts/experiment/`)
-- **`upload_and_prepare.py`** - Uploads code, compiles, generates runner script
-- **`trigger_experiments.py`** - Starts experiments on remote server
-- **`check_progress.py`** - Monitors experiment progress
-- **`download_results.py`** - Downloads results and logs
+Enable checking distance between the data and the sensitivity pair
 
-### Analysis Scripts (`scripts/analysis/`)
-- **`plot_cactus.py`** - Generates cumulative time cactus plots
-- **`result.py`** - Result processing utilities
+```
+python ./src/sensitive.py models/tree_verification_models/breast_cancer_robust/0004.resaved.json --features 7 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/breast_cancer/breast_cancer_details.csv --solver milp --all_opt --prob --compute_data_distance --data_file models/dataset/breast_cancer/breast_cancer_train.csv
+```
 
-### Utilities (`scripts/utils/`)
-- **`ssh_utils.py`** - SSH connection and file transfer utilities
+Generating file that contains summary of patterns
+```
+./src/learn-data.py --model ./models/tree_verification_models/breast_cancer_robust/0004.resaved.json  --data ./models/dataset/breast_cancer/breast_cancer_train.csv --output ./outputs/learned-clauses_breast_cancer --details ./models/dataset/breast_cancer/breast_cancer_details.csv 
+```
 
-## Results
+Distribution aware search for sensitive pairs
 
-Results are downloaded to `experiment_results/`:
-- `outputs/` - Individual benchmark results
-- `logs/` - Experiment logs
-- `experiment_run.log` - Complete experiment log
-- `cactus_plot.png` - Generated analysis plots
+```
+python ./src/sensitive.py models/adult/adult_t200_d5.json --features 11 --output_gap 0.2 0.8 --precision 400 --timeout 100 --details models/dataset/adult/details.csv --solver milp --all_opt --prob --compute_data_distance --data_file models/dataset/adult/train.csv --in_distro_clauses outputs/output/learned-clauses_adult_t200_d5.txt
+```
+
+## Options
+
+To view list of all available commands please look
+
+```
+python sensitive.py -h for help
+```
+
+
+## Installing roundingsat
+
+```
+cd ./utils
+./installrounding.sh
+```
+
+
+## Saving and loading the docker image 
+Saving image for sharing
+```
+docker save -o sensitivity.tar sensitivity:latest
+```
+
+Loading the docker image
+```
+docker load -i sensitivity.tar
+```
+
+
+
+
